@@ -10,12 +10,15 @@ From Cloud Shell, run the following az vm create command to create a Linux VM:
 Azure CLI
 
 Copy
+
 ```az vm create \
   --resource-group learn-b92f53f2-b53e-4b32-a997-3aad863c2df6 \
   --name my-vm \
   --image UbuntuLTS \
   --admin-username azureuser \
-  --generate-ssh-keys```
+  --generate-ssh-keys ```
+
+  
 Your VM will take a few moments to come up.
 
 You name the VM my-vm. You use this name to refer to the VM in later steps.
