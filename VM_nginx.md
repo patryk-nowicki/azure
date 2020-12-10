@@ -58,7 +58,7 @@ IPADDRESS="$(az vm list-ip-addresses \
   --output tsv)"
 ```
 
-Run the following curl command to download the home page:
+2. Run the following curl command to download the home page:
 
 ```
 curl --connect-timeout 5 http://$IPADDRESS
@@ -76,9 +76,9 @@ curl: (28) Connection timed out after 5001 milliseconds
 
 This message means that the VM was not accessible within the timeout period.
 
-As an optional step, try to access the web server from a browser:
+3. As an optional step, try to access the web server from a browser:
 
-Run the following to print your VM's IP address to the console:
+  a. Run the following to print your VM's IP address to the console:
 
 ```
 echo $IPADDRESS
@@ -86,9 +86,9 @@ echo $IPADDRESS
 
 You see an IP address, for example, 23.102.42.235.
 
-Copy the IP address that you see to the clipboard.
+  b. Copy the IP address that you see to the clipboard.
 
-Open a new browser tab and go to your web server.
+  c. Open a new browser tab and go to your web server.
 
 After a few moments, you see that the connection isn't happening. If you wait for the browser to time out, you'll see something like this:
 
