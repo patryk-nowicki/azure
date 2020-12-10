@@ -2,6 +2,7 @@ https://docs.microsoft.com/en-us/learn/modules/secure-network-connectivity-azure
 
 
 #Create a Linux virtual machine and install Nginx
+
 Use the following Azure CLI commands to create a Linux VM and install Nginx. After your VM is created, you'll use the Custom Script Extension to install Nginx. The Custom Script Extension is an easy way to download and run scripts on your Azure VMs. It's just one of the many ways you can configure the system after your VM is up and running.
 
 From Cloud Shell, run the following az vm create command to create a Linux VM:
