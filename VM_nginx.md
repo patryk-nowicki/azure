@@ -96,72 +96,72 @@ A web browser showing an error message that says the connection timed out.
 
 Keep this browser tab open for later.
 
-List the current network security group rules
+# List the current network security group rules
+
 Your web server wasn't accessible. To find out why, let's examine your current NSG rules.
 
-Run the following az network nsg list command to list the network security groups that are associated with your VM:
+1. Run the following az network nsg list command to list the network security groups that are associated with your VM:
 
-Azure CLI
-
-Copy
+```
 az network nsg list \
   --resource-group learn-b92f53f2-b53e-4b32-a997-3aad863c2df6 \
   --query '[].name' \
   --output tsv
+```
+
 You see this:
 
-Output
-
-Copy
+```
 my-vmNSG
+```
+
 Every VM on Azure is associated with at least one network security group. In this case, Azure created an NSG for you called my-vmNSG.
 
-Run the following az network nsg rule list command to list the rules associated with the NSG named my-vmNSG:
+2. Run the following az network nsg rule list command to list the rules associated with the NSG named my-vmNSG:
 
-Azure CLI
-
-Copy
+```
 az network nsg rule list \
   --resource-group learn-b92f53f2-b53e-4b32-a997-3aad863c2df6 \
   --nsg-name my-vmNSG
+```
+
 You see a large block of text in JSON format in the output. In the next step, you'll run a similar command that makes this output easier to read.
 
-Run the az network nsg rule list command a second time.
+3. Run the `az network nsg rule list` command a second time.
 
-This time, use the --query argument to retrieve only the name, priority, affected ports, and access (Allow or Deny) for each rule.
+This time, use the `--query` argument to retrieve only the name, priority, affected ports, and access (**Allow** or **Deny**) for each rule.
 
-The --output argument formats the output as a table so that it's easy to read.
+The `--output` argument formats the output as a table so that it's easy to read.
 
-Azure CLI
-
-Copy
+```
 az network nsg rule list \
   --resource-group learn-b92f53f2-b53e-4b32-a997-3aad863c2df6 \
   --nsg-name my-vmNSG \
   --query '[].{Name:name, Priority:priority, Port:destinationPortRange, Access:access}' \
   --output table
+```
+
+
 You see this:
 
-Output
-
-Copy
+```
 Name               Priority    Port    Access
 -----------------  ----------  ------  --------
 default-allow-ssh  1000        22      Allow
+```
+
 You see the default rule, default-allow-ssh. This rule allows inbound connections over port 22 (SSH). SSH (Secure Shell) is a protocol that's used on Linux to allow administrators to access the system remotely.
 
 The priority of this rule is 1000. Rules are processed in priority order, with lower numbers processed before higher numbers.
 
 By default, a Linux VM's NSG allows network access only on port 22. This enables administrators to access the system. You need to also allow inbound connections on port 80, which allows access over HTTP.
 
-Create the network security rule
+# Create the network security rule
 Here, you create a network security rule that allows inbound access on port 80 (HTTP).
 
-Run the following az network nsg rule create command to create a rule called allow-http that allows inbound access on port 80:
+1. Run the following `az network nsg rule create` command to create a rule called allow-http that allows inbound access on port 80:
 
-Azure CLI
-
-Copy
+```
 az network nsg rule create \
   --resource-group learn-b92f53f2-b53e-4b32-a997-3aad863c2df6 \
   --nsg-name my-vmNSG \
@@ -170,51 +170,48 @@ az network nsg rule create \
   --priority 100 \
   --destination-port-range 80 \
   --access Allow
+```
+
 For learning purposes, here you set the priority to 100. In this case, the priority doesn't matter. You would need to consider the priority if you had overlapping port ranges.
 
-To verify the configuration, run az network nsg rule list to see the updated list of rules:
+2. To verify the configuration, run az network nsg rule list to see the updated list of rules:
 
-Azure CLI
-
-Copy
+```
 az network nsg rule list \
   --resource-group learn-b92f53f2-b53e-4b32-a997-3aad863c2df6 \
   --nsg-name my-vmNSG \
   --query '[].{Name:name, Priority:priority, Port:destinationPortRange, Access:access}' \
   --output table
+```
+
 You see this both the default-allow-ssh rule and your new rule, allow-http:
 
-Output
-
-Copy
+```
 Name               Priority    Port    Access
 -----------------  ----------  ------  --------
 default-allow-ssh  1000        22      Allow
 allow-http         100         80      Allow
-Access your web server again
+```
+
+# Access your web server again
 Now that you've configured network access to port 80, let's try to access the web server a second time.
 
-Run the same curl command that you ran earlier:
+1. Run the same curl command that you ran earlier:
 
-Bash
-
-Copy
+```
 curl --connect-timeout 5 http://$IPADDRESS
+```
+
 You see this:
 
-HTML
-
-Copy
+```{html}
 <html><body><h2>Welcome to Azure! My name is my-vm.</h2></body></html>
+```
+
 As an optional step, refresh your browser tab that points to your web server.
 
 You see this:
 
 A web browser showing the home page from the web server. The home page displays a welcome message along with the web server's host name.
 
-Clean up
-The sandbox automatically cleans up your resources when you're finished with this module.
 
-When you're working in your own subscription, it's a good idea at the end of a project to identify whether you still need the resources you created. Resources left running can cost you money. You can delete resources individually or delete the resource group to delete the entire set of resources.
-
-Nice work. In practice, you can create a standalone network security group that includes the inbound and outbound network access rules you need. If you have multiple VMs that serve the same purpose, you can assign that NSG to each VM at the time you create it. This technique enables you to control network access to multiple VMs under a single, central set of rules.
