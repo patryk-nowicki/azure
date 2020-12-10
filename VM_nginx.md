@@ -11,12 +11,14 @@ Azure CLI
 
 Copy
 
-```az vm create \
+```
+az vm create \
   --resource-group learn-b92f53f2-b53e-4b32-a997-3aad863c2df6 \
   --name my-vm \
   --image UbuntuLTS \
   --admin-username azureuser \
-  --generate-ssh-keys ```
+  --generate-ssh-keys
+```
 
   
 Your VM will take a few moments to come up.
@@ -28,6 +30,8 @@ Run the following az vm extension set command to configure Nginx on your VM:
 Azure CLI
 
 Copy
+
+```
 az vm extension set \
   --resource-group learn-b92f53f2-b53e-4b32-a997-3aad863c2df6 \
   --vm-name my-vm \
@@ -36,6 +40,9 @@ az vm extension set \
   --version 2.1 \
   --settings '{"fileUris":["https://raw.githubusercontent.com/MicrosoftDocs/mslearn-welcome-to-azure/master/configure-nginx.sh"]}' \
   --protected-settings '{"commandToExecute": "./configure-nginx.sh"}'
+
+```
+
 This command uses the Custom Script Extension to run a Bash script on your VM. The script is stored on GitHub.
 
 While the command runs, you can choose to examine the Bash script  from a separate browser tab.
