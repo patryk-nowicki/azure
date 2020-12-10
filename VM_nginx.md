@@ -41,49 +41,49 @@ While the command runs, you can choose to examine the Bash script  from a separa
 
 To summarize, the script:
 
-a. Runs `apt-get update` to download the latest package information from the internet. This step helps ensure that the next command can locate the latest version of the Nginx package.
-
+a. Runs `apt-get update` to download the latest package information from the internet. This step helps ensure that the next command can locate the latest version of the Nginx package
 b. Installs Nginx.
-
 c. Sets the home page, /var/www/html/index.html, to print a welcome message that includes your VM's host name.
 
 # Access your web server
 In this procedure, you get the IP address for your VM and attempt to access your web server's home page.
 
-Run the following az vm list-ip-addresses command to get your VM's IP address and store the result as a Bash variable:
+1. Run the following az vm list-ip-addresses command to get your VM's IP address and store the result as a Bash variable:
 
-Azure CLI
-
-Copy
+```
 IPADDRESS="$(az vm list-ip-addresses \
   --resource-group learn-b92f53f2-b53e-4b32-a997-3aad863c2df6 \
   --name my-vm \
   --query "[].virtualMachine.network.publicIpAddresses[*].ipAddress" \
   --output tsv)"
+```
+
 Run the following curl command to download the home page:
 
-Bash
-
-Copy
+```
 curl --connect-timeout 5 http://$IPADDRESS
-The --connect-timeout argument specifies to allow up to five seconds for the connection to occur.
+```
+
+The `--connect-timeout` argument specifies to allow up to five seconds for the connection to occur.
 
 After five seconds, you see an error message that states that the connection timed out:
 
 Output
 
-Copy
+```
 curl: (28) Connection timed out after 5001 milliseconds
+```
+
 This message means that the VM was not accessible within the timeout period.
 
 As an optional step, try to access the web server from a browser:
 
 Run the following to print your VM's IP address to the console:
 
-Bash
-
-Copy
+```
 echo $IPADDRESS
+```
+
 You see an IP address, for example, 23.102.42.235.
 
 Copy the IP address that you see to the clipboard.
